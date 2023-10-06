@@ -8,6 +8,9 @@ import { limitMessageTokens, updateTotalTokenUsed } from '@utils/messageUtils';
 import { _defaultChatConfig } from '@constants/chat';
 import { officialAPIEndpoint } from '@constants/auth';
 
+const SelectSubmitMessages = (messages:MessageInterface[]) => {
+    return messages.filter(item => item.is_enable);
+}
 const useSubmit = () => {
   const { t, i18n } = useTranslation('api');
   const error = useStore((state) => state.error);
@@ -57,10 +60,8 @@ const useSubmit = () => {
 
     const updatedChats: ChatInterface[] = JSON.parse(JSON.stringify(chats));
 
-    updatedChats[currentChatIndex].messages.push({
-      role: 'assistant',
-      content: '',
-    });
+    updatedChats[currentChatIndex].messages.push(
+      new MessageInterface('assistant','',true));
 
     setChats(updatedChats);
     setGenerating(true);
@@ -68,10 +69,12 @@ const useSubmit = () => {
     try {
       let stream;
       if (chats[currentChatIndex].messages.length === 0)
+      let selected_messages = SelectSubmitMessages(chats[currentChatIndex].messages);
+      if (selected_messages.length === 0)
         throw new Error('No messages submitted!');
 
       const messages = limitMessageTokens(
-        chats[currentChatIndex].messages,
+       selected_messages,
         chats[currentChatIndex].config.max_tokens,
         chats[currentChatIndex].config.model
       );
@@ -133,6 +136,8 @@ const useSubmit = () => {
             );
             const updatedMessages = updatedChats[currentChatIndex].messages;
             updatedMessages[updatedMessages.length - 1].content += resultString;
+            updatedMessages[updatedMessages.length-2].is_enable = true;
+            updatedMessages[updatedMessages.length-1].is_enable = true;
             setChats(updatedChats);
           }
         }
@@ -171,11 +176,7 @@ const useSubmit = () => {
         const user_message =
           currChats[currentChatIndex].messages[messages_length - 2].content;
 
-        const message: MessageInterface = {
-          role: 'user',
-          content: `Generate a title in less than 6 words for the following message (language: ${i18n.language}):\n"""\nUser: ${user_message}\nAssistant: ${assistant_message}\n"""`,
-        };
-
+        const message = new MessageInterface('user',`Generate a title in less than 6 words for the following message (language: ${i18n.language}):\n"""\nUser: ${user_message}\nAssistant: ${assistant_message}\n"""`,true);
         let title = (await generateTitle([message])).trim();
         if (title.startsWith('"') && title.endsWith('"')) {
           title = title.slice(1, -1);
@@ -190,10 +191,9 @@ const useSubmit = () => {
         // update tokens used for generating title
         if (countTotalTokens) {
           const model = _defaultChatConfig.model;
-          updateTotalTokenUsed(model, [message], {
-            role: 'assistant',
-            content: title,
-          });
+          updateTotalTokenUsed(model, [message],
+            new MessageInterface('assistant',title,true)
+           );
         }
       }
     } catch (e: unknown) {

@@ -38,12 +38,14 @@ const ContentView = memo(
     role,
     content,
     setIsEdit,
+
     messageIndex,
   }: {
     role: string;
     content: string;
     setIsEdit: React.Dispatch<React.SetStateAction<boolean>>;
     messageIndex: number;
+
   }) => {
     const { handleSubmit } = useSubmit();
 
@@ -152,6 +154,7 @@ const ContentView = memo(
               <CopyButton onClick={handleCopy} />
               <EditButton setIsEdit={setIsEdit} />
               <DeleteButton setIsDelete={setIsDelete} />
+
             </>
           )}
           {isDelete && (

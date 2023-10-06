@@ -4,7 +4,7 @@ import useStore from '@store/store';
 
 import useSubmit from '@hooks/useSubmit';
 
-import { ChatInterface } from '@type/chat';
+import { ChatInterface, MessageInterface } from '@type/chat';
 
 import PopupModal from '@components/PopupModal';
 import TokenCount from '@components/TokenCount';
@@ -70,7 +70,8 @@ const EditView = ({
     );
     const updatedMessages = updatedChats[currentChatIndex].messages;
     if (sticky) {
-      updatedMessages.push({ role: inputRole, content: _content });
+     // updatedMessages.push({ role: inputRole, content: _content,is_enable:true });
+      updatedMessages.push(new MessageInterface(inputRole,content,true));
       _setContent('');
       resetTextAreaHeight();
     } else {
@@ -89,12 +90,14 @@ const EditView = ({
     const updatedMessages = updatedChats[currentChatIndex].messages;
     if (sticky) {
       if (_content !== '') {
-        updatedMessages.push({ role: inputRole, content: _content });
+       // updatedMessages.push({ role: inputRole, content: _content ,is_enable:true});
+        updatedMessages.push(new MessageInterface(inputRole,_content,true));
       }
       _setContent('');
       resetTextAreaHeight();
     } else {
       updatedMessages[messageIndex].content = _content;
+      updatedMessages[messageIndex].is_enable = true;
       updatedChats[currentChatIndex].messages = updatedMessages.slice(
         0,
         messageIndex + 1

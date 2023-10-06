@@ -15,7 +15,9 @@ const encoder = new Tiktoken(
   },
   cl100k_base.pat_str
 );
-
+const SelectSubmitMessages = (messages:MessageInterface[]) => {
+  return messages.filter(item => item.is_enable);
+}
 // https://github.com/dqbd/tiktoken/issues/23#issuecomment-1483317174
 export const getChatGPTEncoding = (
   messages: MessageInterface[],
@@ -25,9 +27,9 @@ export const getChatGPTEncoding = (
 
   const msgSep = isGpt3 ? '\n' : '';
   const roleSep = isGpt3 ? '\n' : '<|im_sep|>';
-
+  
   const serialized = [
-    messages
+    SelectSubmitMessages(messages)
       .map(({ role, content }) => {
         return `<|im_start|>${role}${roleSep}${content}<|im_end|>`;
       })

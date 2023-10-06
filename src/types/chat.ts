@@ -1,10 +1,27 @@
+import RoleSelector from '@components/Chat/ChatContent/Message/RoleSelector';
 import { Prompt } from './prompt';
 import { Theme } from './theme';
+import { TotalTokenCostToggle } from '@components/SettingsMenu/TotalTokenCost';
 
 export type Role = 'user' | 'assistant' | 'system';
 export const roles: Role[] = ['user', 'assistant', 'system'];
 
-export interface MessageInterface {
+export class MessageInterface {
+  public toJSON:any;
+  constructor(
+    public role:Role,
+    public content:string,
+    public is_enable:boolean
+  ){
+    this.toJSON = () => {
+      return {
+        "role":role,
+        "content":content
+      };
+    }
+  }
+}
+export interface MessageInterfaceForSubmit{
   role: Role;
   content: string;
 }

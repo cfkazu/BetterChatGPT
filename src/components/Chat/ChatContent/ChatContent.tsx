@@ -15,6 +15,7 @@ import ShareGPT from '@components/ShareGPT';
 
 const ChatContent = () => {
   const inputRole = useStore((state) => state.inputRole);
+  const inputisEnable = useStore((state) => state.inputEnable);
   const setError = useStore((state) => state.setError);
   const messages = useStore((state) =>
     state.chats &&
@@ -67,6 +68,7 @@ const ChatContent = () => {
               (advancedMode || index !== 0 || message.role !== 'system') && (
                 <React.Fragment key={index}>
                   <Message
+                    is_enable ={message.is_enable}
                     role={message.role}
                     content={message.content}
                     messageIndex={index}
@@ -78,6 +80,7 @@ const ChatContent = () => {
           </div>
 
           <Message
+            is_enable ={inputisEnable}
             role={inputRole}
             content=''
             messageIndex={stickyIndex}

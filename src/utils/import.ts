@@ -103,7 +103,11 @@ export const convertOpenAIToBetterChatGPTFormat = (
     if (node.message) {
       const { role } = node.message.author;
       const content = node.message.content.parts?.join('') || '';
-      if (content.length > 0) messages.push({ role, content });
+      const is_enable = true;
+     // if (content.length > 0) messages.push({ role, content,is_enable});
+      if (content.length > 0) {
+        messages.push(new MessageInterface(role,content,is_enable));
+      }
     }
 
     // Traverse the last child node if any children exist

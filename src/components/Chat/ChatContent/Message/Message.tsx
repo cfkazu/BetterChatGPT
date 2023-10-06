@@ -6,6 +6,7 @@ import MessageContent from './MessageContent';
 
 import { Role } from '@type/chat';
 import RoleSelector from './RoleSelector';
+import EnableSelector from './EnableSelector';
 
 // const backgroundStyle: { [role in Role]: string } = {
 //   user: 'dark:bg-gray-800',
@@ -20,11 +21,13 @@ const Message = React.memo(
     content,
     messageIndex,
     sticky = false,
+    is_enable,
   }: {
     role: Role;
     content: string;
     messageIndex: number;
     sticky?: boolean;
+    is_enable:boolean;
   }) => {
     const hideSideMenu = useStore((state) => state.hideSideMenu);
     const advancedMode = useStore((state) => state.advancedMode);
@@ -45,11 +48,22 @@ const Message = React.memo(
           <Avatar role={role} />
           <div className='w-[calc(100%-50px)] '>
             {advancedMode &&
+            <div>
               <RoleSelector
                 role={role}
                 messageIndex={messageIndex}
                 sticky={sticky}
-              />}
+              />
+              <EnableSelector  
+              is_enable={is_enable}
+              messageIndex={messageIndex}
+              sticky={sticky}
+              />
+            </div>
+            
+           
+              }
+              
             <MessageContent
               role={role}
               content={content}

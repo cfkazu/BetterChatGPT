@@ -6,18 +6,26 @@ import DownChevronArrow from '@icon/DownChevronArrow';
 import { ChatInterface, Role, roles } from '@type/chat';
 
 import useHideOnOutsideClick from '@hooks/useHideOnOutsideClick';
-
-const RoleSelector = React.memo(
+const display_isenable = (enable:boolean) => {
+  if(enable){
+    return "send";
+  }else{
+    return "no send"
+  }
+}
+const enables:boolean[] = [true,false];
+const EnableSelector = React.memo(
   ({
-    role,
+    is_enable,
     messageIndex,
     sticky,
   }: {
-    role: Role;
+    is_enable:boolean;
     messageIndex: number;
     sticky?: boolean;
   }) => {
     const { t } = useTranslation();
+    const setEnable=useStore((state)=>state.setEnable);
     const setInputRole = useStore((state) => state.setInputRole);
     const setChats = useStore((state) => state.setChats);
     const currentChatIndex = useStore((state) => state.currentChatIndex);
@@ -28,11 +36,11 @@ const RoleSelector = React.memo(
       <div className='prose dark:prose-invert relative'>
         <button
           className='btn btn-neutral btn-small flex gap-1'
-          aria-label={t(role) as string}
+          aria-label={display_isenable(is_enable)}
           type='button'
           onClick={() => setDropDown((prev) => !prev)}
         >
-          {t(role)}
+          {display_isenable(is_enable)}
           <DownChevronArrow />
         </button>
         <div
@@ -46,24 +54,27 @@ const RoleSelector = React.memo(
             className='text-sm text-gray-700 dark:text-gray-200 p-0 m-0'
             aria-labelledby='dropdownDefaultButton'
           >
-            {roles.map((r) => (
+            {enables.map((r) => (
               <li
                 className='px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer'
                 onClick={() => {
+                  is_enable = r;
+                  console.log("CLICKED");
+                  console.log(display_isenable(is_enable));
                   if (!sticky) {
                     const updatedChats: ChatInterface[] = JSON.parse(
                       JSON.stringify(useStore.getState().chats)
                     );
-                    updatedChats[currentChatIndex].messages[messageIndex].role =r;
+                    updatedChats[currentChatIndex].messages[messageIndex].is_enable = r;
                     setChats(updatedChats);
                   } else {
-                    setInputRole(r);
+                    setEnable(r);
                   }
                   setDropDown(false);
                 }}
-                key={r}
+                key={display_isenable(r)}
               >
-                {t(r)}
+                {display_isenable(r)}
               </li>
             ))}
           </ul>
@@ -72,4 +83,4 @@ const RoleSelector = React.memo(
     );
   }
 );
-export default RoleSelector;
+export default EnableSelector;

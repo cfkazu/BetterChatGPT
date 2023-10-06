@@ -47,6 +47,14 @@ export const getChatCompletion = async (
   return data;
 };
 
+function submit_replacer(key:any,value:any){
+  if (key == "is_enable"){
+    return undefined
+  }else{
+    return value;
+  }
+
+}
 export const getChatCompletionStream = async (
   endpoint: string,
   messages: MessageInterface[],
@@ -76,16 +84,20 @@ export const getChatCompletionStream = async (
       endpoint += path;
     }
   }
+  const message_json = JSON.stringify({
+    messages,
+    ...config,
+    max_tokens: undefined,
+    stream: true,
+  },function replacer(key, value) {
+    return (key == 'is_enable') ? undefined : value;
+  }
+);
 
   const response = await fetch(endpoint, {
     method: 'POST',
     headers,
-    body: JSON.stringify({
-      messages,
-      ...config,
-      max_tokens: undefined,
-      stream: true,
-    }),
+    body: message_json,
   });
   if (response.status === 404 || response.status === 405) {
     const text = await response.text();
