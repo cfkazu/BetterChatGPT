@@ -11,6 +11,7 @@ import CrossIcon from '@icon/CrossIcon';
 import useSubmit from '@hooks/useSubmit';
 import DownloadChat from './DownloadChat';
 import CloneChat from './CloneChat';
+import AllEnable from './All_Enable';
 import ShareGPT from '@components/ShareGPT';
 
 const ChatContent = () => {
@@ -113,6 +114,7 @@ const ChatContent = () => {
                 <DownloadChat saveRef={saveRef} />
                 <ShareGPT />
                 <CloneChat />
+                <AllEnable />
               </div>
             )}
           </div>
