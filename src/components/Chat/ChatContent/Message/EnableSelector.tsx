@@ -59,8 +59,6 @@ const EnableSelector = React.memo(
                 className='px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer'
                 onClick={() => {
                   is_enable = r;
-                  console.log("CLICKED");
-                  console.log(display_isenable(is_enable));
                   if (!sticky) {
                     const updatedChats: ChatInterface[] = JSON.parse(
                       JSON.stringify(useStore.getState().chats)

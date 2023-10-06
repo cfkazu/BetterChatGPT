@@ -68,7 +68,6 @@ const useSubmit = () => {
 
     try {
       let stream;
-      if (chats[currentChatIndex].messages.length === 0)
       let selected_messages = SelectSubmitMessages(chats[currentChatIndex].messages);
       if (selected_messages.length === 0)
         throw new Error('No messages submitted!');
